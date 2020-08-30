@@ -5,6 +5,7 @@ from bottle    import get, post, run, request, response
 from time      import sleep
 from dotenv    import load_dotenv
 from sys       import exit
+from strategy  import checkOrBetStrat, callOrRaiseStrat
 
 import requests
 import os
@@ -15,7 +16,7 @@ port          = 3000
 username      = os.getenv('USERNAME')
 api_token     = os.getenv('API_TOKEN')
 bot_endpoint  = os.getenv('BOT_ENDPOINT')
-notifications = False
+notifications = True
 
 @post('/pokerwars.io/play')
 def play():
@@ -28,17 +29,24 @@ def play():
     print('Cards on the table are ' + str(game_info["tableCards"]))
     print('Your bot cards are ' + str(game_info["yourCards"]))
 
+    
+
+    # default action is fold
+    action = {"action": "fold"}
+
     if game_info["canCheckOrBet"]:
         # remember: in poker you can check or bet only if in the current turn no bot has bet already
         # if a bot bet already, you'll need to call or raise.
         print('In this hand, your bot can check or bet')
         print('If you bet, the minimum bet is ' + str(game_info["minBet"]))
+        action = checkOrBetStrat(game_info)
 
     if game_info["canCallOrRaise"]:
         # remember: in poker you can call or raise only if there has been a bet before
         print('In this hand, your bot can call or raise')
         print('If you call, you will spend ' + str(game_info["chipsToCall"]) + ' chips')
         print('If you raise, the minimum raise is ' + str(game_info["minRaise"]))
+        action = callOrRaiseStrat(game_info)
 
     print('The value of small blind now is ' + str(game_info["smallBlindValue"]))
     print('The value of big blind now is ' + str(game_info["bigBlindValue"]))
@@ -46,9 +54,8 @@ def play():
     print('Big blind player is ' + str(game_info["bigBlindPlayer"]))
     print('Players in turn order with their info are: ' + str(game_info["players"]))
 
-    # implement your strategy here, now we always return fold, not great for your leaderboard!
     response.content_type = 'application/json'
-    return {"action": "fold"}
+    return action
 
 @get('/pokerwars.io/ping')
 def ping():
