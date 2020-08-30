@@ -102,3 +102,6 @@ ENV/
 
 #dotenv
 .env
+
+# pycharm
+.idea/
