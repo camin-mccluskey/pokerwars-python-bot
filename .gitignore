@@ -102,3 +102,6 @@ ENV/
 
 #dotenv
 .env
+
+# ignore ngrok
+/ngrok
