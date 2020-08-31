@@ -5,7 +5,7 @@ Implementation of poker bot in Python.
 ## Quick start
 A few requirements to play:
 - have [python](https://www.python.org/) installed
-- [Ngrok](https://ngrok.com/) installed in the project directory
+- [ngrok](https://ngrok.com/) installed in the project directory
 - [Register with Pokerwars](https://www.pokerwars.io/) and retrieve your [API token](https://www.pokerwars.io/token) and [username](https://www.pokerwars.io/profile).
 - check out this repo with git
 
