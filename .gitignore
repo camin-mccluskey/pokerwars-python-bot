@@ -105,3 +105,6 @@ ENV/
 
 # ignore ngrok
 /ngrok
+
+# pycharm
+.idea/
