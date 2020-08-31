@@ -4,7 +4,7 @@ from threading import Thread
 from bottle    import get, post, run, request, response
 from time      import sleep
 from dotenv    import load_dotenv
-from sys       import exit
+from sys       import exit, argv
 from strategy  import checkOrBetStrat, callOrRaiseStrat
 
 import requests
@@ -15,7 +15,8 @@ load_dotenv()
 port          = 3000
 username      = os.getenv('USERNAME')
 api_token     = os.getenv('API_TOKEN')
-bot_endpoint  = os.getenv('BOT_ENDPOINT')
+# pass botendpoint in a cmd line arg from ngrok
+bot_endpoint  = argv[1]
 notifications = True
 
 @post('/pokerwars.io/play')
