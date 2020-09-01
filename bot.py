@@ -1,23 +1,24 @@
 #!/usr/bin/env python
 
 from threading import Thread
-from bottle    import get, post, run, request, response
-from time      import sleep
-from dotenv    import load_dotenv
-from sys       import exit, argv
-from strategy  import checkOrBetStrat, callOrRaiseStrat
+from bottle import get, post, run, request, response
+from time import sleep
+from dotenv import load_dotenv
+from sys import exit, argv
+from strategy import checkOrBetStrat, callOrRaiseStrat
 
 import requests
 import os
 
 load_dotenv()
 
-port          = 3000
-username      = os.getenv('USERNAME')
-api_token     = os.getenv('API_TOKEN')
+port = 3000
+username = os.getenv('USERNAME')
+api_token = os.getenv('API_TOKEN')
 # pass botendpoint in a cmd line arg from ngrok
-bot_endpoint  = argv[1]
+bot_endpoint = argv[1]
 notifications = True
+
 
 @post('/pokerwars.io/play')
 def play():
@@ -25,12 +26,12 @@ def play():
     # You have the current state of the table in the game_info object, which you can use to decide
     # your next move.
     game_info = request.json
-    print('Game info received for tournament ' + str(game_info["tournamentId"]) + ' and round ' + str(game_info["roundId"]) + ', let\'s decide the next bot move for this hand')
+    print('Game info received for tournament ' + str(game_info["tournamentId"]) +
+          ' and round ' + str(game_info["roundId"]) +
+          ', let\'s decide the next bot move for this hand')
     print('Current round turn is ' + str(game_info["roundTurn"]))
     print('Cards on the table are ' + str(game_info["tableCards"]))
     print('Your bot cards are ' + str(game_info["yourCards"]))
-
-    
 
     # default action is fold
     action = {"action": "fold"}
@@ -58,6 +59,7 @@ def play():
     response.content_type = 'application/json'
     return action
 
+
 @get('/pokerwars.io/ping')
 def ping():
     # This is used by pokerwars.io when your bot subscribe to verify that is alive and responding
@@ -65,12 +67,14 @@ def ping():
     response.content_type = 'application/json'
     return {"pong": True}
 
+
 @post('/pokerwars.io/notifications')
 def notifications():
     print('Received notification')
     print(request.json)
     response.content_type = 'application/json'
     return
+
 
 def subscribe():
     down = True
@@ -83,7 +87,11 @@ def subscribe():
             if r.status_code == 200:
                 down = False
 
-                r = requests.post('https://play.pokerwars.io/v1/pokerwars/subscribe', json={'username': username, 'token': api_token, 'botEndpoint': bot_endpoint, 'notifications': bool(notifications)})
+                r = requests.post('https://play.pokerwars.io/v1/pokerwars/subscribe',
+                                  json={'username': username,
+                                        'token': api_token,
+                                        'botEndpoint': bot_endpoint,
+                                        'notifications': bool(notifications)})
 
                 print('Subscription --> Status code: ' + str(r.status_code))
                 print('Subscription --> Body: ' + str(r.json()))
@@ -91,10 +99,11 @@ def subscribe():
                 if r.status_code != 202:
                     print('Failed to subscribe, aborting ...')
                     exit()
-        except:
+        except requests.RequestException:
             exit()
 
         sleep(2)
+
 
 if __name__ == '__main__':
     s = Thread(target=subscribe)
