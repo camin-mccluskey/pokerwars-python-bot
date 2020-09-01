@@ -15,6 +15,7 @@ load_dotenv()
 port = 3000
 username = os.getenv('USERNAME')
 api_token = os.getenv('API_TOKEN')
+
 # pass botendpoint in a cmd line arg from ngrok
 bot_endpoint = argv[1]
 notifications = True

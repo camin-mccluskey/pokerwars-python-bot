@@ -1,1 +1,1 @@
-./ngrok http 3000
+./ngrok http -region=eu 3000
