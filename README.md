@@ -8,6 +8,7 @@ A few requirements to play:
 - [ngrok](https://ngrok.com/) installed in the project directory
 - [Register with Pokerwars](https://www.pokerwars.io/) and retrieve your [API token](https://www.pokerwars.io/token) and [username](https://www.pokerwars.io/profile).
 - check out this repo with git
+- Add a `.env` file with the following
 
 ```
 USERNAME=insert here your bot username, find it at https://www.pokerwars.io/profile
