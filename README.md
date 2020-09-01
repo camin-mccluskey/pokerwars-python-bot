@@ -22,16 +22,14 @@ Install dependencies:
 $ pip install -r requirements.txt
 ```
 
-In Terminal 1, open a tunnel from Port 3000 to the internet:
-```
-$ sh start_tunnel.sh
-```
+Run Tunnel and bot:
+
 > [ngrok](https://ngrok.com/) must be installed in your project directory to open a tunnel.
 
-In Terminal 2, start the bot
 ```
-$ sh start_bot.py
+$ make start
 ```
+
 
 The bot will try to subscribe to pokerwars.io when it starts up, using the tunnel. If no errors occur, it will start playing straightaway, otherwise you should see an error. The most common is Pokerwars cannot see your bot, please double check your bot is visible.
 
@@ -40,3 +38,8 @@ The bot will try to subscribe to pokerwars.io when it starts up, using the tunne
 When the bot starts up, the ```subscribe()``` method waits for its ```/pokerwars.io/ping``` endpoint to become available before subscribing the bot with pokerwars.io.
 
 If the subscription request is not accepted or fails, for whatever reason, the bot will exit.
+
+## Developing
+
+- [ ] Add a strategy runner to dynamically evolve strategy over time
+- [ ] Add tests
