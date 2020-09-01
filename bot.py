@@ -5,10 +5,11 @@ from bottle import get, post, run, request, response
 from time import sleep
 from dotenv import load_dotenv
 from sys import exit, argv
-from strategy import checkOrBetStrat, callOrRaiseStrat
 
 import requests
 import os
+
+from src.strategy import checkOrBetStrat, callOrRaiseStrat
 
 load_dotenv()
 
