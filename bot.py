@@ -5,11 +5,10 @@ from bottle import get, post, run, request, response
 from time import sleep
 from dotenv import load_dotenv
 from sys import exit, argv
+from src.game_master import GameMaster
 
 import requests
 import os
-
-from src.strategy import checkOrBetStrat, callOrRaiseStrat
 
 load_dotenv()
 
@@ -21,50 +20,20 @@ api_token = os.getenv('API_TOKEN')
 bot_endpoint = argv[1]
 notifications = True
 
+# initialise GameMaster
+game_master = GameMaster()
+
 
 @post('/pokerwars.io/play')
 def play():
-    # This endpoint is called by pokerwars.io to request your bot next move on a tournament.
-    # You have the current state of the table in the game_info object, which you can use to decide
-    # your next move.
-    game_info = request.json
-    print('Game info received for tournament ' + str(game_info["tournamentId"]) +
-          ' and round ' + str(game_info["roundId"]) +
-          ', let\'s decide the next bot move for this hand')
-    print('Current round turn is ' + str(game_info["roundTurn"]))
-    print('Cards on the table are ' + str(game_info["tableCards"]))
-    print('Your bot cards are ' + str(game_info["yourCards"]))
-
-    # default action is fold
-    action = {"action": "fold"}
-
-    if game_info["canCheckOrBet"]:
-        # remember: in poker you can check or bet only if in the current turn no bot has bet already
-        # if a bot bet already, you'll need to call or raise.
-        print('In this hand, your bot can check or bet')
-        print('If you bet, the minimum bet is ' + str(game_info["minBet"]))
-        action = checkOrBetStrat(game_info)
-
-    if game_info["canCallOrRaise"]:
-        # remember: in poker you can call or raise only if there has been a bet before
-        print('In this hand, your bot can call or raise')
-        print('If you call, you will spend ' + str(game_info["chipsToCall"]) + ' chips')
-        print('If you raise, the minimum raise is ' + str(game_info["minRaise"]))
-        action = callOrRaiseStrat(game_info)
-
-    print('The value of small blind now is ' + str(game_info["smallBlindValue"]))
-    print('The value of big blind now is ' + str(game_info["bigBlindValue"]))
-    print('Small blind player is ' + str(game_info["smallBlindPlayer"]))
-    print('Big blind player is ' + str(game_info["bigBlindPlayer"]))
-    print('Players in turn order with their info are: ' + str(game_info["players"]))
-
-    response.content_type = 'application/json'
-    return action
+    # This endpoint is called by pokerwars.io to request the bot's next move on a tournament.
+    game_state = request.json
+    return game_master.play(game_state)
 
 
 @get('/pokerwars.io/ping')
 def ping():
-    # This is used by pokerwars.io when your bot subscribe to verify that is alive and responding
+    # This is used by pokerwars.io when the bot subscribes, to verify that is alive and responding
     print('Received ping from pokerwars.io, responding with a pong')
     response.content_type = 'application/json'
     return {"pong": True}

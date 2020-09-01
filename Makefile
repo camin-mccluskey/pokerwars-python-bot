@@ -3,7 +3,7 @@
 lint:
 	flake8
 
-start:
+run:
 	sh scripts/start_tunnel.sh &
 	echo "Tunnel Open"
 	# sleeping to give ngrok time to open the tunnel
